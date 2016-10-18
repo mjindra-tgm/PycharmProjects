@@ -1,6 +1,19 @@
 import threading
 from random import randint
 
+import colored as colored
+
+
+class colors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 class Encryption(threading.Thread):
     """
     A Thread Class, to encrypt words, or wordparts
@@ -127,6 +140,7 @@ def all():
     """
     encdec = input("Encrypt(enc) or Decrypt(dec):")
     while not (encdec == "enc" or encdec == "dec"):
+        print(colors.WARNING+"Kein valider Wert"+colors.ENDC)
         encdec = input("Encrypt(enc) or Decrypt(dec):")
 
     message=input("Message: ")
@@ -136,21 +150,23 @@ def all():
         try:
             number = int(number)
         except ValueError:
-            print(number + "ist keine Zahl. Standardvariante wird durchgeführt. Ein Thread wird verwendet")
+            print(colors.WARNING+ number + " ist keine Zahl. Standardvariante wird durchgeführt. Ein Thread wird verwendet"+colors.ENDC)
             number = 1
         encrypt(message, number)
+        return
 
     elif encdec == "dec":
         key = input("Key:")
         if key.isnumeric():
             if(len(key)>len(message)):
-                print("Ein Schlüssel kann nicht länger sein als das Wort")
+                print(colors.FAIL+"Ein Schlüssel kann nicht länger sein als das Wort"+colors.ENDC)
             elif int(max(key)) >= (len(Encryption.dict)-1):
-                print("Der Schlüssel ist nicht valid")
+                print(colors.FAIL+"Der Schlüssel ist nicht valid"+colors.ENDC)
             else:
                 decrypt(message,key)
+                return
         else:
-            print("Dies ist kein Schlüssel")
-
+            print(colors.FAIL+"Dies ist kein Schlüssel"+colors.ENDC)
+    all()
 
 all()
