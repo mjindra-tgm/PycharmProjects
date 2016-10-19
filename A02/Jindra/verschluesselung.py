@@ -1,8 +1,6 @@
 import threading
 from random import randint
 
-import colored as colored
-
 
 class colors:
     HEADER = '\033[95m'
