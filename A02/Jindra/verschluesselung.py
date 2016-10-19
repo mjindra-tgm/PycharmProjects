@@ -23,8 +23,11 @@ class Encryption(threading.Thread):
     encrypt = ""
     decrypt =""
 
+    #Kleinbuchstaben
     dict = ["mnbvcxylkjhgfdsapoiuztrewq","qwertzuiopasdfghjklyxcvbnm","poiuztrewqasdfghjklmnbvcxy"]
+    #Großbuchstaben
     dictb = ["MNBVCXYLKJHGFDSAPOIUZTREWQ","QWERTZUIOPASDFGHJKLYXCVBNM","POIUZTREWQASDFGHJKLMNBVCXY"]
+    #Zeichen
     dictc = ["1234567890!§$%&/()=?,.-#+´;:_'*", "*'_:;1234567890=)(/&%$§!+*#?,.-", ",.-#+0987654321?=)(/&%$§!;:_*'"]
 
 
@@ -33,6 +36,7 @@ class Encryption(threading.Thread):
         """
         Constructor
         :param word: the word to translate
+        :param key: key to decrypt(if you do)
         """
         threading.Thread.__init__(self)
         self.word = word
@@ -59,14 +63,16 @@ class Encryption(threading.Thread):
             if letter == " ":
                 Encryption.decrypt += " "
             elif 64 < ord(letter) < 91:
-                let = Encryption.dict[self.i].index(letter)+65
-                Encryption.decrypt+=chr(let)
+                let = Encryption.dictb[self.i].index(letter)+65
+                Encryption.decrypt += chr(let)
             elif 96 < ord(letter) < 123:
                 let = Encryption.dict[self.i].index(letter) + 97
-                Encryption.decrypt +=chr(let)
+                Encryption.decrypt += chr(let)
             elif 31 < ord(letter) < 64:
-                let = Encryption.dict[self.i].index(letter) + 31
-                Encryption.decrypt +=chr(let)
+                let = Encryption.dictc[self.i].index(letter) + 31
+                Encryption.decrypt += chr(let)
+            else:
+                Encryption.decrypt += letter
 
         Encryption.key += str(self.i);
 
@@ -86,6 +92,9 @@ class Encryption(threading.Thread):
                 Encryption.encrypt += Encryption.dict[self.i][ord(letter)-97]
             elif 31 < ord(letter) < 64:
                 Encryption.encrypt += Encryption.dictc[self.i][ord(letter) - 31]
+            else:
+                Encryption.encrypt += letter
+
         Encryption.key+=str(self.i);
 
 
@@ -102,7 +111,7 @@ def encrypt(word, number):
     """
     zahl = round(len(word) / number)
     if zahl<1:
-        print("Die Anzahl der Threads ist zu groß. Wir nehmen die maximal mögliche Anzahl an Threads")
+        print(colors.WARNING+"Die Anzahl der Threads ist zu groß. Wir nehmen die maximal mögliche Anzahl an Threads"+colors.ENDC)
         zahl=1
         number=len(word)
     for i in range(0, number):
@@ -153,6 +162,7 @@ def all():
             print(colors.WARNING+ number + " ist keine Zahl. Standardvariante wird durchgeführt. Ein Thread wird verwendet"+colors.ENDC)
             number = 1
         encrypt(message, number)
+        input(colors.BOLD + "Drücken sie eine Taste um aufzuhören" + colors.ENDC)
         return
 
     elif encdec == "dec":
@@ -160,13 +170,15 @@ def all():
         if key.isnumeric():
             if(len(key)>len(message)):
                 print(colors.FAIL+"Ein Schlüssel kann nicht länger sein als das Wort"+colors.ENDC)
-            elif int(max(key)) >= (len(Encryption.dict)-1):
+            elif int(max(key)) >= (len(Encryption.dict)):
                 print(colors.FAIL+"Der Schlüssel ist nicht valid"+colors.ENDC)
             else:
                 decrypt(message,key)
+                input(colors.BOLD + "Drücken sie eine Taste um aufzuhören" + colors.ENDC)
                 return
         else:
             print(colors.FAIL+"Dies ist kein Schlüssel"+colors.ENDC)
+
     all()
 
 all()
