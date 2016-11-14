@@ -158,8 +158,7 @@ def all():
         if key.isnumeric():
             if(len(key)>len(message)):
                 print(colors.FAIL+"Ein Schlüssel kann nicht länger sein als das Wort"+colors.ENDC)
-            elif int(max(key)) >= (len(Encryption.dict)-1):
-                print(colors.FAIL+"Der Schlüssel ist nicht valid"+colors.ENDC)
+
             else:
                 decrypt(message,key)
                 return
